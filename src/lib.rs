@@ -17,29 +17,33 @@ pub mod wordsearch {
         ).collect()
     }
 
-    pub fn matches(wm: &WordMatcher, string: &str) -> bool {
-        let found : &mut Vec<Frequency> = &mut starting_frequencies(&wm);
+    impl WordMatcher {
 
-        match wm.length {
-            Some(length) => if length < string.chars().count() { return false },
-            _ => (),
-        }
+        pub fn matches(&self, string: &str) -> bool {
+            let found : &mut Vec<Frequency> = &mut starting_frequencies(&self);
 
-        for c in string.chars() {
-            let position = wm.alphabet.iter().position(|f| c == f.item);
-
-            match position {
-                Some(i) => {
-                    found[i].count = found[i].count + 1;
-                    if found[i].count > wm.alphabet[i].count {
-                        return false
-                    }
-                },
-                None    => return false
+            match self.length {
+                Some(length) => if length < string.chars().count() { return false },
+                _ => (),
             }
+
+            for c in string.chars() {
+                let position = self.alphabet.iter().position(|f| c == f.item);
+
+                match position {
+                    Some(i) => {
+                        found[i].count = found[i].count + 1;
+                        if found[i].count > self.alphabet[i].count {
+                            return false
+                        }
+                    },
+                    None    => return false
+                }
+            }
+
+            true
         }
 
-        true
     }
 
 }
