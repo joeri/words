@@ -11,10 +11,14 @@ pub mod wordsearch {
         pub length: Option<usize>,
     }
 
-    pub fn matches(wm: WordMatcher, string: &str) -> bool {
-        let found : &mut Vec<Frequency> = &mut wm.alphabet.clone().into_iter().map(|f|
+    fn starting_frequencies(wm: &WordMatcher) -> Vec<Frequency> {
+        wm.alphabet.iter().map(|f|
             Frequency { count: 0, item: f.item }
-        ).collect();
+        ).collect()
+    }
+
+    pub fn matches(wm: &WordMatcher, string: &str) -> bool {
+        let found : &mut Vec<Frequency> = &mut starting_frequencies(&wm);
 
         match wm.length {
             Some(length) => if length < string.chars().count() { return false },
@@ -22,7 +26,7 @@ pub mod wordsearch {
         }
 
         for c in string.chars() {
-            let position = wm.alphabet.clone().into_iter().position(|f| c == f.item);
+            let position = wm.alphabet.iter().position(|f| c == f.item);
 
             match position {
                 Some(i) => {
