@@ -30,20 +30,11 @@ pub mod wordsearch {
     impl WordMatcher {
 
         pub fn matches(&self, string: &str) -> bool {
-            let found : &mut Vec<Frequency> = &mut starting_frequencies(&self);
-
-            match self.length {
-                Exact(length)     => if length != string.chars().count() { return false },
-                Min(length)       => if length  > string.chars().count() { return false },
-                Max(length)       => if length  < string.chars().count() { return false },
-                Between(min, max) => {
-                    let count = string.chars().count();
-                    if count < min || count >= max {
-                        return false;
-                    }
-                },
-                _ => (),
+            if !self.matches_length_constraint(string) {
+                return false;
             }
+
+            let found : &mut Vec<Frequency> = &mut starting_frequencies(&self);
 
             for c in string.chars() {
                 let position = self.alphabet.iter().position(|f| c == f.item);
@@ -60,6 +51,19 @@ pub mod wordsearch {
             }
 
             true
+        }
+
+        pub fn matches_length_constraint(&self, string: &str) -> bool {
+            match self.length {
+                Exact(length)     => length == string.chars().count(),
+                Min(length)       => length <= string.chars().count(),
+                Max(length)       => length >= string.chars().count(),
+                Between(min, max) => {
+                    let count = string.chars().count();
+                    count < min || count >= max
+                },
+                _ => true,
+            }
         }
 
         pub fn from_alphabet(alphabet: &str, length: LengthConstraint) -> WordMatcher {
