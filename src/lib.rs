@@ -2,7 +2,9 @@ pub mod wordsearch {
 
     pub enum LengthConstraint {
         Exact(usize),
+        Min(usize),
         Max(usize),
+        Between(usize, usize),
         Noconstraint,
     }
 
@@ -31,8 +33,15 @@ pub mod wordsearch {
             let found : &mut Vec<Frequency> = &mut starting_frequencies(&self);
 
             match self.length {
-                Exact(length) => if length != string.chars().count() { return false },
-                Max(length)   => if length  < string.chars().count() { return false },
+                Exact(length)     => if length != string.chars().count() { return false },
+                Min(length)       => if length  > string.chars().count() { return false },
+                Max(length)       => if length  < string.chars().count() { return false },
+                Between(min, max) => {
+                    let count = string.chars().count();
+                    if count < min || count >= max {
+                        return false;
+                    }
+                },
                 _ => (),
             }
 
