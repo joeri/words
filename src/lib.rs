@@ -1,5 +1,11 @@
 pub mod wordsearch {
 
+    pub enum LengthConstraint {
+        Exact(usize),
+        Max(usize),
+        Noconstraint,
+    }
+
     #[derive(Clone,Copy)]
     pub struct Frequency {
         pub item: char,
@@ -8,7 +14,7 @@ pub mod wordsearch {
 
     pub struct WordMatcher {
         pub alphabet: Vec<Frequency>,
-        pub length: Option<usize>,
+        pub length: LengthConstraint,
     }
 
     fn starting_frequencies(wm: &WordMatcher) -> Vec<Frequency> {
@@ -17,13 +23,16 @@ pub mod wordsearch {
         ).collect()
     }
 
+    use self::LengthConstraint::*;
+
     impl WordMatcher {
 
         pub fn matches(&self, string: &str) -> bool {
             let found : &mut Vec<Frequency> = &mut starting_frequencies(&self);
 
             match self.length {
-                Some(length) => if length < string.chars().count() { return false },
+                Exact(length) => if length != string.chars().count() { return false },
+                Max(length)   => if length  < string.chars().count() { return false },
                 _ => (),
             }
 

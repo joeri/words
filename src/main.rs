@@ -6,9 +6,13 @@ use std::fs::File;
 use std::io::BufReader;
 use std::io::prelude::*;
 
+use std::env;
+use std::str::FromStr;
+
+
 fn main() {
     let alphabet = vec!(Frequency { item: 'a', count: 2 }, Frequency { item: 'b', count: 3 }, Frequency { item: 'c', count: 1 });
-    let wm = WordMatcher { alphabet: alphabet, length: Some(4) };
+    let wm = WordMatcher { alphabet: alphabet, length: Exact(4) };
 
     let res = File::open("/usr/share/dict/words");
     match res {
