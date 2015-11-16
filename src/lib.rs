@@ -53,6 +53,25 @@ pub mod wordsearch {
             true
         }
 
+        pub fn from_alphabet(alphabet: &str, length: LengthConstraint) -> WordMatcher {
+            let frequencies : &mut Vec<Frequency> = &mut Vec::with_capacity(alphabet.chars().count());
+
+            for c in alphabet.chars() {
+                let position = frequencies.iter().position(|f| c == f.item);
+
+                match position {
+                    Some(pos) => {
+                        let freq = frequencies.swap_remove(pos);
+                        frequencies.push(Frequency { item: c, count: freq.count + 1 });
+                    },
+                    None => frequencies.push(Frequency { item: c, count: 1 }),
+
+                };
+            }
+
+            WordMatcher { alphabet: frequencies.clone(), length: length }
+        }
+
     }
 
 }
