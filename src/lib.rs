@@ -44,7 +44,7 @@ pub mod wordsearch {
 
                 match position {
                     Some(i) => {
-                        found[i].count = found[i].count + 1;
+                        found[i].count += 1;
                         if found[i].count > self.alphabet[i].count {
                             return false
                         }
