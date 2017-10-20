@@ -33,7 +33,10 @@ pub mod wordsearch {
             if !self.matches_length_constraint(string) {
                 return false;
             }
+            self.matches_frequencies(string)
+        }
 
+        pub fn matches_frequencies(&self, string: &str) -> bool {
             let found : &mut Vec<Frequency> = &mut starting_frequencies(&self);
 
             for c in string.chars() {
