@@ -63,11 +63,12 @@ pub mod wordsearch {
                 Max(length)       => length >= string.chars().count(),
                 Between(min, max) => {
                     let count = string.chars().count();
-                    count < min || count >= max
+                    count < min || max <= count
                 },
                 _ => true,
             }
         }
+
 
         pub fn from_alphabet(alphabet: &str, length: LengthConstraint) -> WordMatcher {
             let frequencies : &mut Vec<Frequency> = &mut Vec::with_capacity(alphabet.chars().count());
